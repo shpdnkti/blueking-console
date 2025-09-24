@@ -1,7 +1,7 @@
-FROM python:3.11.10-slim-bullseye
+FROM mirrors.tencent.com/blueking/python:3.11.10-ts3 
 USER root
 
-RUN apt-get update && apt-get install -y wget file gcc curl procps -y
+RUN yum -y install wget file gcc curl procps-ng
 
 RUN mkdir ~/.pip &&  printf '[global]\nindex-url = https://mirrors.cloud.tencent.com/pypi/simple/\nextra-index-url = https://mirrors.tencent.com/repository/pypi/tencent_pypi/simple/' > ~/.pip/pip.conf
 
@@ -13,7 +13,7 @@ RUN pip install poetry==1.8.3
 
 # Change security level of openssl to lower value in order to avoid "CA_MD_TOO_WEAK" error
 # See https://stackoverflow.com/questions/52218876/how-to-fix-ssl-issue-ssl-ctx-use-certificate-ca-md-too-weak-on-python-zeep?rq=1
-RUN sed -i "s/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=0/g" /etc/ssl/openssl.cnf
+#RUN sed -i "s/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=0/g" /etc/ssl/openssl.cnf
 
 ADD ./pyproject.toml .
 ADD ./poetry.lock .
